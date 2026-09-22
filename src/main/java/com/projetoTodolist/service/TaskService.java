@@ -27,6 +27,17 @@ public class TaskService {
     public Optional<Task> findById(Long id) {
         return taskRepository.findById(id);
     }
+
+    public Task update(Long id, Task task) {
+        Optional<Task> existingTask = taskRepository.findById(id);
+        return existingTask.map(t -> {
+            t.setTitle(task.getTitle());
+            t.setDescription(task.getDescription());
+            t.setStatus(task.getStatus());
+            return taskRepository.save(t);
+        }).orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+    }
+    
     public void deleteById(Long id) {
         taskRepository.deleteById(id);
     }
