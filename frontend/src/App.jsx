@@ -50,50 +50,44 @@ function App() {
     }
   };
 
+
+ const handleAddCategory = async (e) => {
+  e.preventDefault();
+  if (!newCategoryName.trim()) return;
+
+  try {
+    const response = await axios.post("http://localhost:8080/api/categories", {
+      name: newCategoryName,
+      color: "#" + Math.floor(Math.random()*16777215).toString(16),
+      // ADICIONE ISSO: O backend exige um objeto user com um id
+      user: { id: 1 } 
+    });
+    setCategories([...categories, response.data]);
+    setNewCategoryName("");
+  } catch (error) {
+    console.error("Erro ao criar categoria:", error);
+    alert("Erro: Verifique se o usuário com ID 1 existe no banco.");
+  }
+};
   const handleAddTask = async (e) => {
-    e.preventDefault();
-    if (!newTaskTitle.trim()) return;
+  e.preventDefault();
+  if (!newTaskTitle.trim()) return;
 
-    try {
-      const response = await axios.post("http://localhost:8080/api/tasks", {
-        title: newTaskTitle,
-        categoryId: categories[0]?.id || null
-      });
-      setTasks([...tasks, response.data]);
-      setNewTaskTitle("");
-    } catch (error) {
-      console.error("Erro ao criar tarefa:", error);
-    }
-  };
-
-  const handleAddCategory = async (e) => {
-    e.preventDefault();
-    if (!newCategoryName.trim()) return;
-
-    try {
-      const response = await axios.post("http://localhost:8080/api/categories", {
-        name: newCategoryName,
-        color: "#" + Math.floor(Math.random()*16777215).toString(16)
-      });
-      setCategories([...categories, response.data]);
-      setNewCategoryName("");
-    } catch (error) {
-      console.error("Erro ao criar categoria:", error);
-    }
-  };
-
-  const handleToggleTask = async (id) => {
-    try {
-      await axios.put(`http://localhost:8080/api/tasks/${id}/toggle`);
-      setTasks(prev => prev.map(task => 
-        task.id === id ? { ...task, completed: !task.completed } : task
-      ));
-    } catch (error) {
-      setTasks(prev => prev.map(task => 
-        task.id === id ? { ...task, completed: !task.completed } : task
-      ));
-    }
-  };
+  try {
+    const response = await axios.post("http://localhost:8080/api/tasks", {
+      title: newTaskTitle,
+      completed: false,
+      // Aqui usamos a categoria que você clicou na barra lateral!
+      category: selectedCategory ? { id: selectedCategory } : null,
+      user: { id: 1 } // O usuário ainda é fixo até você fazer a tela de login
+    });
+    
+    setTasks([...tasks, response.data]);
+    setNewTaskTitle("");
+  } catch (error) {
+    console.error("Erro ao criar tarefa:", error);
+  }
+};
 
   const handleDeleteTask = async (id) => {
     if (!window.confirm("Excluir esta tarefa?")) return;
