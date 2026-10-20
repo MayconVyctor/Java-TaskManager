@@ -11,21 +11,16 @@ function App() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [activeTab, setActiveTab] = useState("tasks");
   
-  // Estado para tema (claro/dark)
+  // Estado para tema (standard, light, darker)
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'light';
+    return localStorage.getItem('theme') || 'standard';
   });
 
-  // Aplicar tema 
+  // Aplicar tema no html/body
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
-
-  // Alternar tema
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
 
   useEffect(() => { 
     fetchTasks();
@@ -120,23 +115,28 @@ function App() {
       {/* HEADER */}
       <header className="modern-header">
         <div className="header-content">
-          <div className="logo-section">
-            <div className="logo-icon">✓</div>
-            <div>
-              <h1>To Do List App</h1>
-              <p></p>
-            </div>
+          <div className="title-wrapper">
+            <h1 id="title">To Do List.</h1>
           </div>
           
-          {/* BOTÃO DE TEMA */}
-          <button 
-            className="theme-toggle-btn" 
-            onClick={toggleTheme}
-            aria-label="Alternar tema claro/escuro"
-            title={theme === 'light' ? 'Modo escuro' : 'Modo claro'}
-          >
-            {theme === 'light' ? '🌙' : '☀️'}
-          </button>
+          {/* SELETORES DE TEMA CIRCULARES */}
+          <div className="flexrow-container">
+            <button 
+              className={`theme-selector standard-theme ${theme === 'standard' ? 'active' : ''}`}
+              onClick={() => setTheme('standard')}
+              title="Tema Padrão"
+            />
+            <button 
+              className={`theme-selector light-theme ${theme === 'light' ? 'active' : ''}`}
+              onClick={() => setTheme('light')}
+              title="Tema Claro"
+            />
+            <button 
+              className={`theme-selector darker-theme ${theme === 'darker' ? 'active' : ''}`}
+              onClick={() => setTheme('darker')}
+              title="Tema Escuro Profundo"
+            />
+          </div>
         </div>
       </header>
 
@@ -149,14 +149,14 @@ function App() {
               className={`tab-btn ${activeTab === 'tasks' ? 'active' : ''}`}
               onClick={() => setActiveTab('tasks')}
             >
-              <span className="tab-icon">📋</span>
+              <span className="tab-icon"></span>
               Tarefas
             </button>
             <button 
               className={`tab-btn ${activeTab === 'categories' ? 'active' : ''}`}
               onClick={() => setActiveTab('categories')}
             >
-              <span className="tab-icon">🏷️</span>
+              <span className="tab-icon"></span>
               Categorias
             </button>
           </div>
@@ -165,7 +165,7 @@ function App() {
             <>
               {/* FILTRO DE CATEGORIAS */}
               <div className="sidebar-section">
-                <h3 className="section-title">Filtrar por</h3>
+                <h3 className="section-title">Filtrar por Categoria</h3>
                 <div className="filter-chips">
                   <button 
                     className={`filter-chip ${selectedCategory === null ? 'active' : ''}`}
@@ -188,40 +188,21 @@ function App() {
                   ))}
                 </div>
               </div>
-
-              {/* NOVA TAREFA */}
-              <div className="sidebar-section">
-                <h3 className="section-title">Nova Tarefa</h3>
-                <form onSubmit={handleAddTask} className="modern-form">
-                  <input 
-                    type="text" 
-                    placeholder="O que precisa ser feito?"
-                    value={newTaskTitle}
-                    onChange={(e) => setNewTaskTitle(e.target.value)}
-                    className="modern-input"
-                  />
-                  <button type="submit" className="btn-primary-modern">
-                    <span className="btn-icon">+</span>
-                    Adicionar Tarefa
-                  </button>
-                </form>
-              </div>
             </>
           ) : (
             /* NOVA CATEGORIA */
             <div className="sidebar-section">
-              <h3 className="section-title">Nova Categoria</h3>
-              <form onSubmit={handleAddCategory} className="modern-form">
+              <h3 className="section-title">Categorias</h3>
+              <form onSubmit={handleAddCategory} className="sidebar-form">
                 <input 
                   type="text" 
                   placeholder="Nome da categoria"
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
-                  className="modern-input"
+                  className="sidebar-input"
                 />
-                <button type="submit" className="btn-primary-modern btn-secondary-modern">
-                  <span className="btn-icon">+</span>
-                  Criar Categoria
+                <button type="submit" className="sidebar-btn">
+                  Criar
                 </button>
               </form>
 
@@ -246,6 +227,22 @@ function App() {
 
         {/* CONTEÚDO PRINCIPAL */}
         <main className="main-content">
+          {/* BARRA DE NOVA TAREFA CENTRALIZADA ESTILO JUST DO IT */}
+          <div className="task-input-section">
+            <form onSubmit={handleAddTask} className="modern-form">
+              <input 
+                type="text" 
+                placeholder="O que precisa ser feito?"
+                value={newTaskTitle}
+                onChange={(e) => setNewTaskTitle(e.target.value)}
+                className="modern-input"
+              />
+              <button type="submit" className="btn-primary-modern">
+                Adicionar
+              </button>
+            </form>
+          </div>
+
           <div className="content-header">
             <h2 className="content-title">
               {selectedCategory 
@@ -314,9 +311,8 @@ function App() {
               ))
             ) : (
               <div className="empty-state">
-                <div className="empty-icon">📝</div>
                 <h3>Nenhuma tarefa encontrada</h3>
-                <p>Comece adicionando uma nova tarefa ao lado!</p>
+                <p>Comece adicionando uma nova tarefa acima!</p>
               </div>
             )}
           </div>
