@@ -2,8 +2,11 @@ package com.projetoTodolist.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +38,19 @@ class TaskServiceTest {
 
         assertNotNull(resultado);
         assertEquals("Nova", resultado.getStatus());
+    }
+
+    @Test 
+    void deveLancarExcecaoAoTentarAtualizarTaskInexistente() {
+        Long idInexistente = 99L;
+        Task taskAtualizada = new Task();
+        taskAtualizada.setTitle("Qualquer titulo");
+        
+        when(taskRepository.findById(idInexistente)).thenReturn(Optional.empty());
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            taskService.update(idInexistente, taskAtualizada);
+        });
+        assertEquals("Task not found with id: 99", exception.getMessage());
     }
 }
 
