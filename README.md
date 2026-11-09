@@ -1,4 +1,4 @@
-# To Do List App
+# Task Maneger App
 
 Aplicacao fullstack de gerenciamento de tarefas construida com **Spring Boot** no backend e **React** no frontend. Permite criar, listar, editar, excluir e organizar tarefas por categorias, com interface moderna que suporta tema claro e escuro.
 
