@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.projetoTodolist.exception.ResourceNotFoundException;
 import com.projetoTodolist.model.Category;
 import com.projetoTodolist.repository.CategoryRepository;
 
@@ -35,7 +36,7 @@ public class CategoryService {
             updatedCategory.setName(category.getName());
             return categoryRepository.save(updatedCategory);
         } else {
-            throw new RuntimeException("Categoria não encontrada com o ID: " + id);
+            throw new ResourceNotFoundException("Categoria não encontrada com o ID: " + id);
         }
     }
 

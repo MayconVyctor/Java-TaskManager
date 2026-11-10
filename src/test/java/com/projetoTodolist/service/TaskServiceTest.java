@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.projetoTodolist.exception.ResourceNotFoundException;
 import com.projetoTodolist.model.Task;
 import com.projetoTodolist.repository.TaskRepository;
 
@@ -47,7 +48,7 @@ class TaskServiceTest {
         taskAtualizada.setTitle("Qualquer titulo");
         
         when(taskRepository.findById(idInexistente)).thenReturn(Optional.empty());
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
             taskService.update(idInexistente, taskAtualizada);
         });
         assertEquals("Task not found with id: 99", exception.getMessage());

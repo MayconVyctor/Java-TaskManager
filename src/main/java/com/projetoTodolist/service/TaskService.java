@@ -1,5 +1,6 @@
 package com.projetoTodolist.service;
 
+import com.projetoTodolist.exception.ResourceNotFoundException;
 import com.projetoTodolist.model.Task;
 import com.projetoTodolist.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class TaskService {
             t.setDescription(task.getDescription());
             t.setStatus(task.getStatus());
             return taskRepository.save(t);
-        }).orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+        }).orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
     }
     
     public void deleteById(Long id) {
