@@ -6,5 +6,4 @@ import com.projetoTodolist.model.Task;
 
 public interface TaskDAO extends JpaRepository<Task, Long> {
     
-    
 }
