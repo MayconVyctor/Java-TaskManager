@@ -1,4 +1,4 @@
-# Task Manager App
+# Task Manager 
 
 Aplicacao fullstack de gerenciamento de tarefas construida com **Spring Boot** no backend e **React** no frontend, que permite criar, listar, editar, excluir e organizar tarefas por categorias, com interface moderna que suporta tema claro e escuro.
 
